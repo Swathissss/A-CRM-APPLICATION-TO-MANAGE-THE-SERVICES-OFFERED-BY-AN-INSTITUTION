@@ -1,0 +1,19 @@
+trigger OpportunityTaskTrigger on Opportunity (after insert) {
+    List<Task> tasks = new List<Task>();
+
+    for (Opportunity opp : Trigger.new) {
+        Task task = new Task(
+            Subject = 'Follow-up with Opportunity',
+            WhoId = opp.Id,
+            OwnerId = opp.OwnerId,
+            Status = 'Not Started',
+            Priority = 'High'
+        );
+        tasks.add(task);
+    }
+
+    if (!tasks.isEmpty()) {
+        insert tasks;
+    }
+}
+
